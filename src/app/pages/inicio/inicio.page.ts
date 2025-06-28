@@ -1,3 +1,4 @@
+// inicio.page.ts
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,11 +9,9 @@ import {
   IonToolbar,
   IonButtons,
   IonBackButton,
-  ModalController,
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/game.service';
-import { PlayerService } from 'src/app/services/player.service';
 import { Game } from 'src/app/types/Game';
 import { Player } from 'src/app/types/Player';
 
@@ -34,22 +33,32 @@ import { Player } from 'src/app/types/Player';
 })
 export class InicioPage implements OnInit {
   @Input() player!: Player;
-  @Input() game!: Game;
 
   private router = inject(Router);
-  private playerService = inject(PlayerService);
   private gameService = inject(GameService);
-  private modalController = inject(ModalController);
 
-  constructor() {}
+  ngOnInit() {
+    if (!this.player?.id) {
+      console.error('Jogador não definido ou sem ID');
+      this.router.navigate(['/home']);
+      return;
+    }
 
-  ngOnInit() {}
+    const newGame: Game = {
+      fase: 'inicio',
+      player: { id: this.player.id },
+    };
 
-  public salvarPlayer() {
-    this.playerService.salvar(this.player).subscribe(() => {});
-  }
-
-  public salvarGame() {
-    this.gameService.salvar(this.game).subscribe(() => {});
+    this.gameService.salvar(newGame).subscribe({
+      next: (savedGame: Game) => {
+        console.log('Jogo salvo com sucesso:', savedGame);
+        if (savedGame.id) {
+          this.player.game = { id: savedGame.id };
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao salvar jogo:', err);
+      },
+    });
   }
 }

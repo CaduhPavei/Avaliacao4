@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Game } from '../types/Game';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +12,14 @@ export class GameService {
 
   private http = inject(HttpClient);
 
-  public salvar(game: Game) {
-    if (game.id) {
-      return this.http.put(`${this.urlApi}/${game.id}`, game);
-    }
-    const novoGame = { ...game };
-    delete novoGame.id;
-
-    return this.http.post(this.urlApi, novoGame);
+  public salvar(game: Game): Observable<Game> { 
+  if (game.id) {
+    return this.http.put<Game>(`${this.urlApi}/${game.id}`, game);
   }
+  const novoGame = { ...game };
+  delete novoGame.id;
+  return this.http.post<Game>(this.urlApi, novoGame);
+}
 
   public excluir(id: string) {
     return this.http.delete(`${this.urlApi}/${id}`);
