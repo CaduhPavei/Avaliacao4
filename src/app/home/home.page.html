@@ -1,20 +1,62 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title> Aventura </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true"
+  ><ion-card>
+    <ion-card-header>
+      <ion-card-title>Cadastre-se para iniciar</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form>
+        <ion-item> </ion-item>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+        <ion-item>
+          <ion-input
+            label="Jogador"
+            labelPlacement="floating"
+            fill="clear"
+            [(ngModel)]="player.nome"
+            name="Jogador"
+          />
+        </ion-item>
+
+        <ion-button
+          expand="block"
+          color="dark"
+          class="ion-margin-top"
+          (click)="salvar()"
+        >
+          Salvar
+          <ion-icon name="save-outline" slot="start" />
+        </ion-button>
+      </form>
+      <ion-button
+        expand="block"
+        color="dark"
+        class="ion-margin-top"
+        (click)="iniciar()"
+        >Iniciar Aventura</ion-button
+      >
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-content>
+      <ion-card-header>
+        <ion-card-title>Rankings</ion-card-title>
+      </ion-card-header>
+      <ion-list>
+        @for( player of players; track player.id){
+          <ion-item>
+            <ion-label>
+              <h2>{{game.player.nome}}</h2>
+              <p><strong>Fase: </strong>{{ game.fase }}</p>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
